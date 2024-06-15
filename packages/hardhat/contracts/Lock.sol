@@ -1,10 +1,17 @@
-// SPDX-License-Identifier: UNLICENSED
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
 // Uncomment this line to use console.log
 // import "hardhat/console.sol";
+// import "https://github.com/0glabs/0g-storage-client/tree/main/node";
+// import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/IERC20.sol";
+
+
 
 contract Lock {
+    
+    string private ip = "https://rpc-storage-testnet.0g.ai";
+
     uint public unlockTime;
     address payable public owner;
 
