@@ -1,12 +1,21 @@
+import React, { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ethers } from "ethers";
+import { ethers, BrowserProvider, Contract, formatUnits } from "ethers";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import DataContractFactory from "../../artifacts/contracts/DataContractFactory.sol/DataContractFactory.json";
+import { useStore } from "../store/store";
+import {
+  useWeb3ModalProvider,
+  useWeb3ModalAccount,
+} from "@web3modal/ethers/react";
 
 const Upload = () => {
-  const [file, setFile] = useState<File | null>(null);
+  const { address, chainId, isConnected } = useWeb3ModalAccount();
+  const { walletProvider } = useWeb3ModalProvider();
 
+  const [file, setFile] = useState<File | null>(null);
+  const { setContract, setProvider, setSigner } = useStore();
   useEffect(() => {
     const initialize = async () => {
       window;
@@ -16,23 +25,31 @@ const Upload = () => {
         // as INFURA). They do not have private keys installed,
         // so they only have read-only access
         console.log("MetaMask not installed; using read-only defaults");
-        // setProvider(ethers.getDefaultProvider());
+        setProvider(ethers.getDefaultProvider());
       } else {
         // Connect to the MetaMask EIP-1193 object. This is a standard
         // protocol that allows Ethers access to make all read-only
         // requests through MetaMask.
-        const providerT = new ethers.BrowserProvider((window as any).ethereum);
+        const providerT = new BrowserProvider(walletProvider!);
         // It also provides an opportunity to request access to write
         // operations, which will be performed by the private key
         // that MetaMask manages for the user.
 
         // "0x966efc9A9247116398441d87085637400A596C3F",
         const signerT = await providerT.getSigner();
-        // const contractT = new ethers.Contract(
-        //   "0xCfB9fCb9b6395B92673C4B15fA8aaDA81dC450b4",
-        //   SkillVouchContract.abi,
-        //   signerT
-        // );
+        const contractT = new ethers.Contract(
+          "0x9624480dd377F15E910Cd85eCc2982DB86b771B4",
+          DataContractFactory.abi,
+          signerT
+        );
+
+        setContract(contractT);
+        setSigner(signerT);
+        setProvider(providerT);
+
+        console.log(providerT);
+        console.log(signerT);
+        console.log(contractT);
 
         // await contractT.mintTokensToNewUsers();
       }

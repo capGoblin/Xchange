@@ -15,6 +15,40 @@ import { Team } from "./components/Team";
 import Upload from "./components/Upload";
 import { Testimonials } from "./components/Testimonials";
 import "./App.css";
+import { createWeb3Modal, defaultConfig } from "@web3modal/ethers/react";
+
+// 1. Get projectId
+const projectId = "YOUR_PROJECT_ID";
+
+// 2. Set chains
+const zg = {
+  chainId: 16600,
+  name: "0g Newton Testnet",
+  currency: "A0GI",
+  explorerUrl: "https://chainscan-newton.0g.ai",
+  rpcUrl: "https://rpc-testnet.0g.ai",
+};
+
+// 3. Create a metadata object
+const metadata = {
+  name: "Xchange",
+  description: "Your description",
+  url: "https://example.com",
+  icons: ["icon1.png", "icon2.png"],
+};
+
+// 4. Create Ethers config
+const ethersConfig = defaultConfig({
+  /*Required*/
+  metadata,
+});
+
+// 5. Create a Web3Modal instance
+createWeb3Modal({
+  ethersConfig,
+  chains: [zg],
+  projectId,
+});
 
 function App() {
   return (

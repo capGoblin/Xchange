@@ -160,11 +160,15 @@ func uploadFile(client *node.Client, filePath string) {
 	}
 
 	defer file.Close()
-
-	if err := uploader.Upload(file, opt); err != nil {
-		fmt.Println(err)
+	errw := uploader.Upload(file, opt)
+	if errw != nil {
 		return
 	}
+	fmt.Println(errw)
+	// if err := ; err != nil {
+	// 	fmt.Println(err)
+	// 	return
+	// }
 
 }
 
