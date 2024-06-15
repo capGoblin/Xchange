@@ -31,17 +31,27 @@ type uploadArgs struct {
 	taskSize uint
 }
 
+type downloadArgs struct {
+	root  string
+	file  string
+	proof bool
+	nodes []string
+}
+
 func main() {
 	// client := connect()
 
 	// uploadFile(client)
 
-    http.HandleFunc("/upload", corsMiddleware(uploadHandler))
+    // http.HandleFunc("/upload", corsMiddleware(uploadHandler))
 
-    fmt.Println("Starting server on :8080")
-    if err := http.ListenAndServe(":8080", nil); err != nil {
-        fmt.Println("Error starting server:", err)
-    }
+    // fmt.Println("Starting server on :8080")
+    // if err := http.ListenAndServe(":8080", nil); err != nil {
+    //     fmt.Println("Error starting server:", err)
+    // }
+
+
+	download()
 	// fmt.Println("Starting server...")
 	// http.HandleFunc("/", handler)
 	// http.ListenAndServe(":8080", nil)
@@ -170,6 +180,32 @@ func uploadFile(client *node.Client, filePath string) {
 	// 	return
 	// }
 
+}
+
+func download() {
+	downloadArgs := downloadArgs{
+		root:  "0xd7de846b1f4d337e8b31ec3344bc182437c65ec8c284e82b67a11dc0dd5b2cfe",
+		file:  "./dir/icon3.webp",
+		proof: false,
+		nodes: []string{"https://rpc-storage-testnet.0g.ai"},
+	}
+
+	// Initialize nodes
+	nodes := node.MustNewClients(downloadArgs.nodes)
+	for _, client := range nodes {
+		defer client.Close()
+	}
+
+	// Create downloader
+	downloader, err := transfer.NewDownloader(nodes...)
+	if err != nil {
+		fmt.Println("Failed to initialize downloader")
+	}
+
+	// Perform download
+	if err := downloader.Download(downloadArgs.root, downloadArgs.file, downloadArgs.proof); err != nil {
+		fmt.Println("Failed to download file", err)
+	}
 }
 
 

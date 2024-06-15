@@ -81,7 +81,7 @@ const Upload = () => {
           },
         }
       );
-      console.log(response.data);
+      console.log(response);
     } catch (error) {
       console.error("There was an error uploading the file!", error);
     }
