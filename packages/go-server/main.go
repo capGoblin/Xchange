@@ -32,13 +32,70 @@ type uploadArgs struct {
 }
 
 func main() {
-	client := connect()
+	// client := connect()
 
-	uploadFile(client)
+	// uploadFile(client)
+
+    http.HandleFunc("/upload", corsMiddleware(uploadHandler))
+
+    fmt.Println("Starting server on :8080")
+    if err := http.ListenAndServe(":8080", nil); err != nil {
+        fmt.Println("Error starting server:", err)
+    }
 	// fmt.Println("Starting server...")
 	// http.HandleFunc("/", handler)
 	// http.ListenAndServe(":8080", nil)
 }
+
+
+func uploadHandler(w http.ResponseWriter, r *http.Request) {
+    if r.Method != http.MethodPost {
+        http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+        return
+    }
+
+    file, _, err := r.FormFile("file")
+    if err != nil {
+        http.Error(w, "Error retrieving the file", http.StatusBadRequest)
+        return
+    }
+    defer file.Close()
+
+    tempFile, err := os.CreateTemp("", "upload-*.tmp")
+    if err != nil {
+        http.Error(w, "Error creating temp file", http.StatusInternalServerError)
+        return
+    }
+    defer tempFile.Close()
+
+    _, err = file.Seek(0, 0)
+    if err != nil {
+        http.Error(w, "Error reading the file", http.StatusInternalServerError)
+        return
+    }
+
+    _, err = tempFile.ReadFrom(file)
+    if err != nil {
+        http.Error(w, "Error saving the file", http.StatusInternalServerError)
+        return
+    }
+
+    client := connect()
+    if client == nil {
+        http.Error(w, "Error connecting to storage client", http.StatusInternalServerError)
+        return
+    }
+
+	fmt.Println(tempFile, "saf")
+	fmt.Println(tempFile.Name(), "asfa")
+
+
+    uploadFile(client, tempFile.Name())
+
+    w.Write([]byte("File uploaded successfully"))
+}
+
+
 
 func connect() *node.Client {
 	ip := "https://rpc-storage-testnet.0g.ai"
@@ -60,14 +117,14 @@ func connect() *node.Client {
 	return client
 }
 
-func uploadFile(client *node.Client) {
+func uploadFile(client *node.Client, filePath string) {
 	err := godotenv.Load()
 	if err != nil {
 		return
 	}
 
 	args := uploadArgs{
-		file: "test.txt",
+        file: filePath,
 		tags: "0x",
 		url: "https://rpc-testnet.0g.ai",
 		contract: "0xb8F03061969da6Ad38f0a4a9f8a86bE71dA3c8E7",
@@ -112,7 +169,17 @@ func uploadFile(client *node.Client) {
 }
 
 
-func handler(w http.ResponseWriter, r *http.Request) {
-    fmt.Fprintf(w, "Hello from Go server!")
-}
+func corsMiddleware(next http.HandlerFunc) http.HandlerFunc {
+    return func(w http.ResponseWriter, r *http.Request) {
+        w.Header().Set("Access-Control-Allow-Origin", "*")
+        w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+        w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 
+        if r.Method == http.MethodOptions {
+            w.WriteHeader(http.StatusOK)
+            return
+        }
+
+        next(w, r)
+    }
+}

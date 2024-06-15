@@ -12,6 +12,7 @@ import { ScrollToTop } from "./components/ScrollToTop";
 import { Services } from "./components/Services";
 import { Sponsors } from "./components/Sponsors";
 import { Team } from "./components/Team";
+import Upload from "./components/Upload";
 import { Testimonials } from "./components/Testimonials";
 import "./App.css";
 
@@ -19,7 +20,8 @@ function App() {
   return (
     <>
       <Navbar />
-      <Hero />
+      <Upload />
+      {/* <Hero />
       <Sponsors />
       <About />
       <HowItWorks />
@@ -30,7 +32,7 @@ function App() {
       <Team />
       <Pricing />
       <Newsletter />
-      <FAQ />
+      <FAQ /> */}
       <Footer />
       <ScrollToTop />
     </>
