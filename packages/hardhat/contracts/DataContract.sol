@@ -5,8 +5,7 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 
 // This is the main building block for DataMarket smart contracts.
 contract DataContract {
-
-    // struct DataListing 
+    // struct DataListing
     string public name; // name of the data set files(s) for exchange
     string public description; // description of the data set file(s) for exchange
     string public createdAt; // created at timestmap for the contract
@@ -16,7 +15,7 @@ contract DataContract {
     string public size; // Size description
     address public owner; // Owner of the data listing
     bool public active; // Owner-controlled active status for the contract
-    string private dataUrl; // Shared location of data assets
+    string public dataUrl; // Shared location of data assets
 
     uint256 public MIN_PURCHASES = 3; // Contract pays once this amount of purchases completed without min flags.
 
@@ -45,7 +44,7 @@ contract DataContract {
         // createdAt = _createdAt;
         keywords = _keywords;
         size = _size;
-        
+
         purchases = 0;
         active = true;
     }
@@ -99,10 +98,9 @@ contract DataContract {
         active = !active;
     }
 
-
-     function getDescription() public view returns (string memory) {
+    function getDescription() public view returns (string memory) {
         return description;
-     }
+    }
 
     function getMetadataString() public view returns (string memory) {
         return

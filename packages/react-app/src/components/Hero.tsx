@@ -48,7 +48,7 @@ export const Hero = () => {
         // "0x966efc9A9247116398441d87085637400A596C3F",
         const signerT = await providerT.getSigner();
         const contractT = new ethers.Contract(
-          "0x9624480dd377F15E910Cd85eCc2982DB86b771B4",
+          "0x94018d8436f5A2ae49132aCf1C835e0AA05029E7",
           DataContractFactory.abi,
           signerT
         );
