@@ -32,6 +32,7 @@ const Purchase = () => {
     setUpload,
     upload,
     purchase,
+    searchString,
   } = useStore();
   const [dataContracts, setDataContracts] = useState<string[]>([]);
   const [rerender, setRerender] = useState<boolean>(false);
@@ -218,23 +219,36 @@ const Purchase = () => {
     >
       <main className="flex-1 overflow-auto p-6 md:p-10">
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {dataItems!.map((input, index) => (
-            <Card key={index}>
-              <CardHeader className="flex items-center gap-4">
-                <Avatar>
-                  <img src="/placeholder.svg" alt="User Avatar" />
-                  <AvatarFallback>JD</AvatarFallback>
-                </Avatar>
-                <div className="grid gap-1">
-                  <div className="font-semibold">{input._name}</div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">
-                    {input._description}
+          {dataItems!.map((input, index) => {
+            if (
+              searchString &&
+              !input._name.toLowerCase().includes(searchString.toLowerCase()) &&
+              !input._description
+                .toLowerCase()
+                .includes(searchString.toLowerCase()) &&
+              !input._priceWei
+                .toLowerCase()
+                .includes(searchString.toLowerCase()) &&
+              !input._size.toLowerCase().includes(searchString.toLowerCase())
+            )
+              return null;
+            return (
+              <Card key={index}>
+                <CardHeader className="flex items-center gap-4">
+                  <Avatar>
+                    <img src="/placeholder.svg" alt="User Avatar" />
+                    <AvatarFallback>JD</AvatarFallback>
+                  </Avatar>
+                  <div className="grid gap-1">
+                    <div className="font-semibold">{input._name}</div>
+                    <div className="text-sm text-gray-500 dark:text-gray-400">
+                      {input._description}
+                    </div>
                   </div>
-                </div>
-              </CardHeader>
-              <CardContent className="grid gap-4">
-                {/* <div> */}
-                {/* <div className="text-sm font-semibold">Data URL</div>
+                </CardHeader>
+                <CardContent className="grid gap-4">
+                  {/* <div> */}
+                  {/* <div className="text-sm font-semibold">Data URL</div>
                   <div className="text-sm text-gray-500 dark:text-gray-400">
                     <a
                       href={input._dataUrl}
@@ -244,62 +258,63 @@ const Purchase = () => {
                       {input._dataUrl}
                     </a>
                   </div> */}
-                {/* </div> */}
-                <div>
-                  <div className="text-sm font-semibold">Price (A0GI)</div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">
-                    {input._priceWei}
+                  {/* </div> */}
+                  <div>
+                    <div className="text-sm font-semibold">Price (A0GI)</div>
+                    <div className="text-sm text-gray-500 dark:text-gray-400">
+                      {input._priceWei}
+                    </div>
                   </div>
-                </div>
-                <div>
-                  <div className="text-sm font-semibold">Keywords</div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">
-                    {input._keywords.includes(",")
-                      ? input._keywords.join(", ")
-                      : input._keywords}
+                  <div>
+                    <div className="text-sm font-semibold">Keywords</div>
+                    <div className="text-sm text-gray-500 dark:text-gray-400">
+                      {input._keywords.includes(",")
+                        ? input._keywords.join(", ")
+                        : input._keywords}
+                    </div>
                   </div>
-                </div>
-                <div>
-                  <div className="text-sm font-semibold">Size</div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">
-                    {input._size}
+                  <div>
+                    <div className="text-sm font-semibold">Size</div>
+                    <div className="text-sm text-gray-500 dark:text-gray-400">
+                      {input._size}
+                    </div>
                   </div>
-                </div>
-                <div className="flex items-center gap-2 mb-4">
-                  <a
-                    href="https://linkedin.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <div className="flex items-center gap-2 mb-4">
+                    <a
+                      href="https://linkedin.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {/* <FaLinkedin className="h-6 w-6" /> */}
+                    </a>
+                    <a
+                      href="https://github.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {/* <FaGithub className="h-6 w-6" /> */}
+                    </a>
+                  </div>
+                </CardContent>
+                <div className="flex justify-evenly space-x-12 mb-8 mr-5">
+                  <Button
+                    className="w-1/2 mx-5 bg-green-600"
+                    onClick={() => callPurchase(index)}
                   >
-                    {/* <FaLinkedin className="h-6 w-6" /> */}
-                  </a>
-                  <a
-                    href="https://github.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {/* <FaGithub className="h-6 w-6" /> */}
-                  </a>
+                    Purchase
+                  </Button>
+                  <Button variant="destructive" className="w-1/2 mx-5">
+                    Flag
+                  </Button>
                 </div>
-              </CardContent>
-              <div className="flex justify-evenly space-x-12 mb-8 mr-5">
-                <Button
-                  className="w-1/2 mx-5 bg-green-600"
-                  onClick={() => callPurchase(index)}
-                >
-                  Purchase
-                </Button>
-                <Button variant="destructive" className="w-1/2 mx-5">
-                  Flag
-                </Button>
-              </div>
-              {/* <div className="flex justify-center -mt-4 mb-4">
+                {/* <div className="flex justify-center -mt-4 mb-4">
               <Button variant="secondary" className="w-full mx-5">
                 Close
               </Button>
             </div> */}
-            </Card>
-          ))}
+              </Card>
+            );
+          })}
           {/* )) */}
           {/* } */}
         </div>

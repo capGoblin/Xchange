@@ -19,6 +19,7 @@ import { ModeToggle } from "./mode-toggle";
 import { LogoIcon } from "./Icons";
 import ConnectButton from "./ConnectButton";
 import { useStore } from "../store/store";
+import SearchBar from "./SearchBar";
 
 interface RouteProps {
   href: string;
@@ -165,6 +166,7 @@ export const Navbar = () => {
             >
               Purchase
             </a>
+            {purchase && <SearchBar />}
             {/* {routeList.map((route: RouteProps, i) => (
               <a
                 rel="noreferrer noopener"

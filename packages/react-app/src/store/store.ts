@@ -21,6 +21,8 @@ interface State {
   setUpload: (upload: boolean) => void;
   purchase: boolean;
   setPurchase: (purchase: boolean) => void;
+  searchString: string;
+  setSearchString: (searchString: string) => void;
 }
 
 export const useStore = create<State>((set) => ({
@@ -36,4 +38,6 @@ export const useStore = create<State>((set) => ({
   setUpload: (upload) => set({ upload }),
   purchase: false,
   setPurchase: (purchase) => set({ purchase }),
+  searchString: "",
+  setSearchString: (searchString) => set({ searchString }),
 }));
