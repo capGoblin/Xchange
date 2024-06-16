@@ -16,8 +16,8 @@ import Upload from "./components/Upload";
 import { Testimonials } from "./components/Testimonials";
 import "./App.css";
 import { createWeb3Modal, defaultConfig } from "@web3modal/ethers/react";
-import Purchase from "./components/Purchase";
 import { useStore } from "./store/store";
+import Purchase from "./components/Purchase";
 
 // 1. Get projectId
 const projectId = "YOUR_PROJECT_ID";

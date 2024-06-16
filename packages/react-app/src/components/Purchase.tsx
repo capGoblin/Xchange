@@ -160,6 +160,16 @@ const Purchase = () => {
     displayPurchase(dataContracts);
   }, [dataContracts]);
 
+  const flagListing = async (index: number) => {
+    const contract = new ethers.Contract(
+      dataContracts[index],
+      DataContract.abi,
+      signer
+    );
+
+    await contract.flagDataset("This dataset is inappropriate");
+  };
+
   const callPurchase = async (index: number) => {
     const contractAdd: DataItem = dataItems[index];
 
@@ -232,6 +242,7 @@ const Purchase = () => {
               !input._size.toLowerCase().includes(searchString.toLowerCase())
             )
               return null;
+
             return (
               <Card key={index}>
                 <CardHeader className="flex items-center gap-4">
@@ -303,7 +314,13 @@ const Purchase = () => {
                   >
                     Purchase
                   </Button>
-                  <Button variant="destructive" className="w-1/2 mx-5">
+                  <Button
+                    variant="destructive"
+                    className="w-1/2 mx-5"
+                    onClick={() => {
+                      flagListing(index);
+                    }}
+                  >
                     Flag
                   </Button>
                 </div>
