@@ -10,6 +10,7 @@ import {
   useWeb3ModalProvider,
   useWeb3ModalAccount,
 } from "@web3modal/ethers/react";
+import { HeroCards } from "./HeroCards";
 
 export const Hero = () => {
   const {
@@ -18,6 +19,7 @@ export const Hero = () => {
     setSigner,
     setPurchase,
     contract,
+    setUpload,
     upload,
     purchase,
   } = useStore();
@@ -25,8 +27,6 @@ export const Hero = () => {
   const [rerender, setRerender] = useState<boolean>(false);
 
   useEffect(() => {
-    setPurchase(false);
-
     const initialize = async () => {
       window;
       if ((window as any).ethereum == null) {
@@ -74,56 +74,64 @@ export const Hero = () => {
 
   return (
     <section
-      className="container grid place-items-center py-20 md:py-32 gap-10"
+      className="container grid place-items-center py-20 md:py-32 gap-10 m-32"
       style={{
         display: !upload && !purchase ? "block" : "none",
-        // position: "absolute",
+        position: "absolute",
         visibility: !upload && !purchase ? "visible" : "hidden",
       }}
     >
-      <div className="text-center lg:text-start space-y-6">
-        <main className="text-5xl md:text-6xl font-bold">
-          <h1 className="inline">
-            <span className="inline bg-gradient-to-r from-[#F596D3]  to-[#D247BF] text-transparent bg-clip-text">
-              Shadcn
-            </span>{" "}
-            landing page
-          </h1>{" "}
-          for{" "}
-          <h2 className="inline">
-            <span className="inline bg-gradient-to-r from-[#61DAFB] via-[#1fc0f1] to-[#03a3d7] text-transparent bg-clip-text">
-              React
-            </span>{" "}
-            developers
-          </h2>
-        </main>
+      <div className="flex flex-row w-full">
+        <div className="text-center lg:text-start space-y-6 w-2/3">
+          <main className="text-5xl md:text-6xl font-bold">
+            <h1 className="inline">
+              <span className="inline bg-gradient-to-r from-[#F596D3]  to-[#D247BF] text-transparent bg-clip-text">
+                Unlock
+              </span>{" "}
+              the Value of Your
+            </h1>{" "}
+            <h2 className="inline">
+              <span className="inline bg-gradient-to-r from-[#61DAFB] via-[#1fc0f1] to-[#03a3d7] text-transparent bg-clip-text">
+                Data
+              </span>{" "}
+              with Xchange
+            </h2>
+          </main>
 
-        <p className="text-xl text-muted-foreground md:w-10/12 mx-auto lg:mx-0">
-          Build your React landing page effortlessly with the required sections
-          to your project.
-        </p>
+          <p className="text-xl text-muted-foreground md:w-10/12 mx-auto lg:mx-0">
+            Xchange is a secure and decentralized platform that empowers users
+            to upload and monetize their data on the 0G chain.
+          </p>
 
-        <div className="space-y-4 md:space-y-0 md:space-x-4">
-          <Button className="w-full md:w-1/3">Get Started</Button>
+          <div className="space-y-4 md:space-y-0 md:space-x-4">
+            <Button
+              className="w-full md:w-1/3"
+              onClick={() => {
+                if (!upload) setUpload(true);
+              }}
+            >
+              Get Started
+            </Button>
 
-          <a
-            rel="noreferrer noopener"
-            href="https://github.com/leoMirandaa/shadcn-landing-page.git"
-            target="_blank"
-            className={`w-full md:w-1/3 ${buttonVariants({
-              variant: "outline",
-            })}`}
-          >
-            Github Repository
-            <GitHubLogoIcon className="ml-2 w-5 h-5" />
-          </a>
+            <a
+              rel="noreferrer noopener"
+              href="https://github.com/leoMirandaa/shadcn-landing-page.git"
+              target="_blank"
+              className={`w-full md:w-1/3 ${buttonVariants({
+                variant: "outline",
+              })}`}
+            >
+              Github Repository
+              <GitHubLogoIcon className="ml-2 w-5 h-5" />
+            </a>
+          </div>
+        </div>
+        <div className="w-1/3 justify-end ml-40 hidden sm:flex">
+          <HeroCards />
         </div>
       </div>
 
       {/* Hero cards sections */}
-      {/* <div className="z-10">
-        <HeroCards />
-      </div> */}
 
       {/* Shadow effect */}
       <div className="shadow"></div>

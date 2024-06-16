@@ -26,25 +26,6 @@ interface RouteProps {
   label: string;
 }
 
-// const routeList: RouteProps[] = [
-//   {
-//     href: "#features",
-//     label: "Upload",
-//   },
-//   {
-//     href: "#testimonials",
-//     label: "Testimonials",
-//   },
-//   {
-//     href: "#pricing",
-//     label: "Pricing",
-//   },
-//   {
-//     href: "#faq",
-//     label: "FAQ",
-//   },
-// ];
-
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { upload, setUpload, purchase, setPurchase } = useStore();
@@ -60,7 +41,7 @@ export const Navbar = () => {
               className="ml-2 font-bold text-xl flex"
             >
               <LogoIcon />
-              ShadcnUI/React
+              Xchange
             </a>
           </NavigationMenuItem>
 

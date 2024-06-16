@@ -19,8 +19,15 @@ import {
 import { useStore } from "../store/store";
 import { ethers } from "ethers";
 
-const CreateData = ({ rootHex }: { rootHex: String }) => {
-  const [open, setOpen] = useState(false);
+const CreateData = ({
+  rootHex,
+  open,
+  setOpen,
+}: {
+  rootHex: String;
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   // const [dataUrl, setDataUrl] = useState("");
@@ -57,11 +64,11 @@ const CreateData = ({ rootHex }: { rootHex: String }) => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
+      {/* <DialogTrigger asChild>
         <Button>
           <FaPlus className="mr-5" /> Create New Request
         </Button>
-      </DialogTrigger>
+      </DialogTrigger> */}
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Create Request</DialogTitle>

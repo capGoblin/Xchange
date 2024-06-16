@@ -17,6 +17,7 @@ import CreateData from "./CreateData";
 const Upload = () => {
   const { address, chainId, isConnected } = useWeb3ModalAccount();
   const { walletProvider } = useWeb3ModalProvider();
+  const [open, setOpen] = useState(false);
 
   const [file, setFile] = useState<File | null>(null);
   const [rootHex, setRootHex] = useState<String>("");
@@ -95,6 +96,7 @@ const Upload = () => {
       console.log(str);
       // if (!str) throw new Error("Root hex not found");
       if (str) setRootHex(str);
+      setOpen(true);
       setCreateData(true);
     } catch (error) {
       console.error("There was an error uploading the file!", error);
@@ -116,22 +118,34 @@ const Upload = () => {
           visibility: upload && !purchase ? "visible" : "hidden",
         }}
       >
-        <form onSubmit={handleSubmit}>
-          <Label htmlFor="file" className="flex space-x-3 justify-center">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col h-full w-full items-center justify-center space-y-20"
+        >
+          <Label htmlFor="file" className="flex space-x-4 justify-center">
             <FaPlus className="h-7 w-7" />
             <div className="text-lg h-8">Add files here</div>
           </Label>
-          <div className="flex flex-col justify-center items-center space-y-4">
-            <Input id="file" type="file" onChange={handleFileChange} />
-            <Button
-              type="submit"
-              className="h-10 w-max border-spacing-2 bg-blue-500 rounded-md"
-            >
-              Upload
-            </Button>
+          <div className="space-y-4">
+            <Input
+              id="file"
+              type="file"
+              className="h-10 border-spacing-2 rounded-md"
+              onChange={handleFileChange}
+            />
+            <div className="flex justify-center">
+              <Button
+                type="submit"
+                className="h-10 w-1/4 border-spacing-2 rounded-md"
+              >
+                Upload
+              </Button>
+            </div>
           </div>
         </form>
-        {createData && <CreateData rootHex={rootHex} />}
+        {createData && (
+          <CreateData rootHex={rootHex} open={open} setOpen={setOpen} />
+        )}
       </div>
     </div>
   );
