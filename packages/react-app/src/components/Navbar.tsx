@@ -77,7 +77,7 @@ export const Navbar = () => {
                       variant: "ghost",
                     })}`}
                   >
-                    Upload
+                    Upload Listing
                   </a>
                   <a
                     rel="noreferrer noopener"
@@ -105,7 +105,7 @@ export const Navbar = () => {
                   ))} */}
                   {/* <a
                     rel="noreferrer noopener"
-                    href="https://github.com/leoMirandaa/shadcn-landing-page.git"
+                    href="https://github.com/capGoblin/Xchange"
                     target="_blank"
                     className={`w-[110px] border ${buttonVariants({
                       variant: "secondary",
@@ -132,7 +132,7 @@ export const Navbar = () => {
                 variant: "ghost",
               })}`}
             >
-              Upload
+              Upload Listing
             </a>
             <a
               rel="noreferrer noopener"

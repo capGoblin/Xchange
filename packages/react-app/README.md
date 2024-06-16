@@ -37,7 +37,7 @@ Build your React landing page effortlessly with the required sections to your pr
 1. Clone this repository:
 
 ```bash
-git clone https://github.com/leoMirandaa/shadcn-landing-page.git
+git clone https://github.com/capGoblin/Xchange
 ```
 
 2. Go into project

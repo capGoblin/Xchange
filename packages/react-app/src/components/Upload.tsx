@@ -136,9 +136,9 @@ const Upload = () => {
             <div className="flex justify-center">
               <Button
                 type="submit"
-                className="h-10 w-1/4 border-spacing-2 rounded-md"
+                className="h-10 w-2/4 border-spacing-2 rounded-md"
               >
-                Upload
+                Upload Listing
               </Button>
             </div>
           </div>
