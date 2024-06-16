@@ -1,8 +1,8 @@
 # Xchange
 
-## Upload, Sell, and Purchase Datasets with 0G's infinitely scalable DA layer and storage system.
+## Upload and Sell Datasets with 0G's infinitely scalable DA layer and storage system.
 
-Xchange is a decentralized data exchange platform that empowers users to upload, sell, and purchase data securely, transparently, and efficiently. Say goodbye to traditional contracts and fees as Xchange leverages the agility of the Fastest Modular AI Chain and the scalability of 0G's data infrastructure to drive Web3 innovation.
+Xchange is a decentralized datasets exchange platform that empowers users to upload and sell data securely, transparently, and efficiently. Say goodbye to traditional contracts and fees as Xchange leverages the agility of the Fastest Modular AI Chain and the scalability of 0G's data infrastructure to drive Web3 innovation.
 
 ### Problem Statement
 
