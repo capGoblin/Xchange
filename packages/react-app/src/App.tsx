@@ -57,14 +57,9 @@ function App() {
   return (
     <>
       <Navbar />
-      {upload == false && purchase == false ? (
-        <Hero />
-      ) : upload == true && purchase == false ? (
-        <Upload />
-      ) : purchase == true && upload == false ? (
-        <Purchase />
-      ) : null}
-      {/* {upload ? <Upload /> : null}  */}
+      <Hero />
+      <Upload />
+      <Purchase />
       {/* 
       <Sponsors />
       <About />
@@ -77,7 +72,7 @@ function App() {
       <Pricing />
       <Newsletter />
       <FAQ /> */}
-      <Footer />
+      {/* <Footer /> */}
       <ScrollToTop />
     </>
   );

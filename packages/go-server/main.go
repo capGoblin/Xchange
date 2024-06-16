@@ -3,11 +3,14 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"io"
 	"net/http"
 	"os"
+	"path/filepath"
 	"regexp"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/joho/godotenv"
 
@@ -107,7 +110,9 @@ func main() {
 
 	// uploadFile(client)
 
-    http.HandleFunc("/upload", corsMiddleware(uploadHandler))
+    // http.HandleFunc("/upload", corsMiddleware(uploadHandler))
+	http.HandleFunc("/download", corsMiddleware(downloadHandler))
+
 
     fmt.Println("Starting server on :8080")
     if err := http.ListenAndServe(":8080", nil); err != nil {
@@ -173,7 +178,39 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("File uploaded successfully: " + str))
 }
 
+func downloadHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("GET params were:", r.URL.Query().Get("root"))
 
+	rootHash := r.URL.Query().Get("root")
+	if rootHash == "" {
+		http.Error(w, "Missing root hash parameter", http.StatusBadRequest)
+		return
+	}
+
+	filename, err := downloadFile(rootHash)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Open the file
+	file, err := os.Open(filename)
+	if err != nil {
+		http.Error(w, "Failed to open file", http.StatusInternalServerError)
+		return
+	}
+	defer file.Close()
+
+	// Set content type and headers
+	w.Header().Set("Content-Type", "application/octet-stream")
+	w.Header().Set("Content-Disposition", "attachment; filename="+filepath.Base(filename))
+
+	// Write file contents to response
+	if _, err := io.Copy(w, file); err != nil {
+		http.Error(w, "Failed to write file to response", http.StatusInternalServerError)
+		return
+	}
+}
 
 func connect() *node.Client {
 	ip := "https://rpc-storage-testnet.0g.ai"
@@ -251,11 +288,17 @@ func uploadFile(client *node.Client, filePath string) {
 	// }
 
 }
+func generateUniqueFilename() string {
+	timestamp := time.Now().Format("20060102150405")
+	return fmt.Sprintf("./dir/icon_%s.tmp", timestamp)
+}
 
-func download() {
+func downloadFile(rootHash string) (string, error) {
+	uniqueFilename := generateUniqueFilename()
+
 	downloadArgs := downloadArgs{
-		root:  "0x9124ef3c4925165f47cdaf186f896597d769bb19e5b159bbb23e5fa778d52af0",
-		file:  "./dir/icon3.tmp",
+		root:  rootHash,
+		file:  uniqueFilename,
 		proof: false,
 		nodes: []string{"https://rpc-storage-testnet.0g.ai"},
 	}
@@ -269,20 +312,22 @@ func download() {
 	// Create downloader
 	downloader, err := transfer.NewDownloader(nodes...)
 	if err != nil {
-		fmt.Println("Failed to initialize downloader")
+		return "", fmt.Errorf("failed to initialize downloader: %v", err)
 	}
 
 	// Perform download
 	if err := downloader.Download(downloadArgs.root, downloadArgs.file, downloadArgs.proof); err != nil {
-		fmt.Println("Failed to download file", err)
+		return "", fmt.Errorf("failed to download file: %v", err)
 	}
+
+	return uniqueFilename, nil
 }
 
 
 func corsMiddleware(next http.HandlerFunc) http.HandlerFunc {
     return func(w http.ResponseWriter, r *http.Request) {
         w.Header().Set("Access-Control-Allow-Origin", "*")
-        w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+        w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE")
         w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 
         if r.Method == http.MethodOptions {

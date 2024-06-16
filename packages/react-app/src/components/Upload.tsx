@@ -22,9 +22,10 @@ const Upload = () => {
   const [rootHex, setRootHex] = useState<String>("");
   const [createData, setCreateData] = useState<boolean>(false);
 
-  const { setContract, setProvider, setSigner, setPurchase } = useStore();
+  const { setContract, setProvider, setSigner, setPurchase, upload, purchase } =
+    useStore();
   useEffect(() => {
-    setPurchase(false);
+    if (purchase) setPurchase(false);
     const initialize = async () => {
       window;
       if ((window as any).ethereum == null) {
@@ -106,8 +107,15 @@ const Upload = () => {
     return root;
   };
   return (
-    <>
-      <div className="grid w-full max-w-sm items-center justify-center gap-1.5">
+    <div className="flex justify-center items-center m-48">
+      <div
+        className="grid items-center justify-center gap-1.5 h-max w-max"
+        style={{
+          display: upload && !purchase ? "block" : "none",
+          // position: "absolute",
+          visibility: upload && !purchase ? "visible" : "hidden",
+        }}
+      >
         <form onSubmit={handleSubmit}>
           <Label htmlFor="file" className="flex space-x-3 justify-center">
             <FaPlus className="h-7 w-7" />
@@ -125,7 +133,7 @@ const Upload = () => {
         </form>
         {createData && <CreateData rootHex={rootHex} />}
       </div>
-    </>
+    </div>
   );
 };
 

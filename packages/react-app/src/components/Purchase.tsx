@@ -9,6 +9,7 @@ import {
 } from "@web3modal/ethers/react";
 import DataContract from "../../artifacts/contracts/DataContract.sol/DataContract.json";
 import { ethers } from "ethers";
+import axios from "axios";
 
 interface DataItem {
   _name: string;
@@ -22,22 +23,34 @@ interface DataItem {
 const Purchase = () => {
   const { address, chainId, isConnected } = useWeb3ModalAccount();
 
-  const { dataItems, setDataItems, contract, provider, signer, setUpload } =
-    useStore();
+  const {
+    dataItems,
+    setDataItems,
+    contract,
+    provider,
+    signer,
+    setUpload,
+    upload,
+    purchase,
+  } = useStore();
   const [dataContracts, setDataContracts] = useState<string[]>([]);
+  const [rerender, setRerender] = useState<boolean>(false);
 
   useEffect(() => {
-    setUpload(false);
-    // if (!address) return;
+    if (upload) setUpload(false);
+    if (purchase) console.log("Purchase is true");
+    if (address == undefined || contract == null) {
+      setRerender(!rerender);
+    }
     console.log(address);
 
     async function fetchUserContracts(userAddress: string) {
       try {
+        console.log(contract);
+
         const contracts = await contract.getContractsByOwner(userAddress);
         console.log(`Contracts for user ${userAddress}:`, contracts);
         setDataContracts(contracts);
-
-        displayPurchase(contracts);
       } catch (error) {
         console.error("Error fetching user contracts:", error);
       }
@@ -86,58 +99,109 @@ const Purchase = () => {
     //     _size: "3MB",
     //   },
     // ]);
-  }, []);
+  }, [rerender]);
+  useEffect(() => {
+    const displayPurchase = async (contractAddress: string[]) => {
+      console.log(dataContracts);
+      const purchaseArr: DataItem[] = [];
+      for (const contractAdd of contractAddress) {
+        const contract = new ethers.Contract(
+          contractAdd,
+          DataContract.abi,
+          signer
+        );
 
-  const displayPurchase = async (contractAddress: string[]) => {
-    const purchaseArr: DataItem[] = [];
-    for (const contractAdd of contractAddress) {
-      const contract = new ethers.Contract(
-        contractAdd,
-        DataContract.abi,
-        signer
+        const name = await contract.name();
+        const description = await contract.description();
+        const priceWei = await contract.priceWei();
+        const priceEth = ethers.formatEther(priceWei);
+        const keywords = await contract.keywords();
+        const size = await contract.size();
+
+        purchaseArr.push({
+          _name: name,
+          _description: description,
+          _dataUrl: "",
+          _priceWei: priceEth,
+          _keywords: keywords,
+          _size: size,
+        });
+
+        // setDataItems([
+        //   ...dataItems,
+        //   {
+        //     _name: name,
+        //     _description: description,
+        //     _dataUrl: "",
+        //     _priceWei: priceWei,
+        //     _keywords: keywords,
+        //     _size: size,
+        //   },
+        // ]);
+      }
+
+      setDataItems(purchaseArr);
+      // try {
+      //   await contract.purchaseDataContract(contractAddress, {
+      //     value: ethers.utils.parseEther("0.0001"),
+      //   });
+      // } catch (error) {
+      //   console.error("Error purchasing data contract:", error);
+      // }
+    };
+    console.log(dataContracts);
+    displayPurchase(dataContracts);
+  }, [dataContracts]);
+
+  const callPurchase = async (index: number) => {
+    const contractAdd: DataItem = dataItems[index];
+
+    const rootHash = `${contractAdd._dataUrl}`;
+
+    try {
+      // await contract.
+      // const response = await fetch(
+      //   `http://localhost:8080/download?root=${0x9124ef3c4925165f47cdaf186f896597d769bb19e5b159bbb23e5fa778d52af0}`
+      // );
+      const response = await axios.get(
+        // `http://localhost:8080/download`,
+
+        `http://localhost:8080/download?root=${encodeURIComponent(rootHash)}`,
+        {
+          responseType: "blob", // Specify response type as blob
+        }
       );
+      const blob = new Blob([response.data]);
 
-      const name = await contract.name();
-      const description = await contract.description();
-      const priceWei = await contract.priceWei();
-      const priceEth = ethers.formatEther(priceWei);
-      const keywords = await contract.keywords();
-      const size = await contract.size();
+      // Create download URL for the blob
+      const url = URL.createObjectURL(blob);
 
-      purchaseArr.push({
-        _name: name,
-        _description: description,
-        _dataUrl: "",
-        _priceWei: priceEth,
-        _keywords: keywords,
-        _size: size,
-      });
+      // Create a temporary anchor element
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "downloaded_file.tmp"; // Specify the filename here
+      document.body.appendChild(a);
 
-      // setDataItems([
-      //   ...dataItems,
-      //   {
-      //     _name: name,
-      //     _description: description,
-      //     _dataUrl: "",
-      //     _priceWei: priceWei,
-      //     _keywords: keywords,
-      //     _size: size,
-      //   },
-      // ]);
+      // Initiate download automatically
+      a.click();
+
+      // Cleanup
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.log(`Download failed: ${error}`);
     }
-
-    setDataItems(purchaseArr);
-    // try {
-    //   await contract.purchaseDataContract(contractAddress, {
-    //     value: ethers.utils.parseEther("0.0001"),
-    //   });
-    // } catch (error) {
-    //   console.error("Error purchasing data contract:", error);
-    // }
   };
 
   return (
-    <div className="flex flex-col">
+    <div
+      className="flex flex-col top-10"
+      style={{
+        display: purchase ? "block" : "none",
+        position: "absolute",
+        visibility: purchase ? "visible" : "hidden",
+      }}
+    >
       <main className="flex-1 overflow-auto p-6 md:p-10">
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {dataItems!.map((input, index) => (
@@ -205,7 +269,12 @@ const Purchase = () => {
                 </div>
               </CardContent>
               <div className="flex justify-evenly space-x-12 mb-8 mr-5">
-                <Button className="w-1/2 mx-5 bg-green-600">Purchase</Button>
+                <Button
+                  className="w-1/2 mx-5 bg-green-600"
+                  onClick={() => callPurchase(index)}
+                >
+                  Purchase
+                </Button>
                 <Button variant="destructive" className="w-1/2 mx-5">
                   Flag
                 </Button>

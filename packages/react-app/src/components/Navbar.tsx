@@ -89,7 +89,7 @@ export const Navbar = () => {
                     // href={}
                     // key={i}
                     onClick={() => {
-                      setUpload(!upload);
+                      if (!upload) setUpload(true);
                     }}
                     className={`text-[17px] ${buttonVariants({
                       variant: "ghost",
@@ -101,7 +101,9 @@ export const Navbar = () => {
                     rel="noreferrer noopener"
                     // href={}
                     // key={i}
-                    onClick={() => setPurchase(!purchase)}
+                    onClick={() => {
+                      if (!purchase) setPurchase(true);
+                    }}
                     className={`text-[17px] ${buttonVariants({
                       variant: "ghost",
                     })}`}
@@ -142,7 +144,7 @@ export const Navbar = () => {
               // href={}
               // key={i}
               onClick={() => {
-                if (upload == false) setUpload(true);
+                if (!upload) setUpload(true);
               }}
               className={`text-[17px] ${buttonVariants({
                 variant: "ghost",
@@ -155,7 +157,7 @@ export const Navbar = () => {
               // href={}
               // key={i}
               onClick={() => {
-                if (purchase == false) setPurchase(true);
+                if (!purchase) setPurchase(true);
               }}
               className={`text-[17px] ${buttonVariants({
                 variant: "ghost",
