@@ -285,9 +285,7 @@ const Purchase = () => {
                   <div>
                     <div className="text-sm font-semibold">Keywords</div>
                     <div className="text-sm text-gray-500 dark:text-gray-400">
-                      {input._keywords.includes(",")
-                        ? input._keywords.join(", ")
-                        : input._keywords}
+                      {input._keywords}
                     </div>
                   </div>
                   <div>
