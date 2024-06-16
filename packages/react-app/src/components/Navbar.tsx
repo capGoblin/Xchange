@@ -20,11 +20,6 @@ import SearchBar from "./SearchBar";
 import { ModeToggle } from "./mode-toggle";
 import { buttonVariants } from "./ui/button";
 
-interface RouteProps {
-  href: string;
-  label: string;
-}
-
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { upload, setUpload, purchase, setPurchase } = useStore();

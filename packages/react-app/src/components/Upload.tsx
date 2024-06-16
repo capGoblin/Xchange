@@ -17,7 +17,7 @@ const Upload = () => {
   const [open, setOpen] = useState(false);
 
   const [file, setFile] = useState<File | null>(null);
-  const [rootHex, setRootHex] = useState<String>("");
+  const [rootHex, setRootHex] = useState<string>("");
   const [createData, setCreateData] = useState<boolean>(false);
 
   const { setContract, setProvider, setSigner, setPurchase, upload, purchase } =

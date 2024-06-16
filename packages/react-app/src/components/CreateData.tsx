@@ -18,7 +18,7 @@ const CreateData = ({
   open,
   setOpen,
 }: {
-  rootHex: String;
+  rootHex: string;
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
@@ -31,7 +31,7 @@ const CreateData = ({
 
   // const { address, chainId, isConnected } = useWeb3ModalAccount();
 
-  const { contract, provider, signer } = useStore();
+  const { contract } = useStore();
 
   const handleSubmit = async () => {
     // Handle the form submission here

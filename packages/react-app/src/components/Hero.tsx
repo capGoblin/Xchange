@@ -13,7 +13,6 @@ export const Hero = () => {
     setContract,
     setProvider,
     setSigner,
-    setPurchase,
     contract,
     setUpload,
     upload,

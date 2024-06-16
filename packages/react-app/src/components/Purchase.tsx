@@ -25,7 +25,6 @@ const Purchase = () => {
     dataItems,
     setDataItems,
     contract,
-    provider,
     signer,
     setUpload,
     upload,

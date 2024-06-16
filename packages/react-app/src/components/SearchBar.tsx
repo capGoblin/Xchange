@@ -1,4 +1,3 @@
-import React from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { useStore } from "../store/store";
 
