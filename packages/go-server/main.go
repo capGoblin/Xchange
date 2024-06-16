@@ -110,7 +110,7 @@ func main() {
 
 	// uploadFile(client)
 
-    // http.HandleFunc("/upload", corsMiddleware(uploadHandler))
+    http.HandleFunc("/upload", corsMiddleware(uploadHandler))
 	http.HandleFunc("/download", corsMiddleware(downloadHandler))
 
 
