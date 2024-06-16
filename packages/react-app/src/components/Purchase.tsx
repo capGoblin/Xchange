@@ -1,15 +1,12 @@
-import React, { useEffect, useState } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { useStore } from "../store/store";
-import {
-  useWeb3ModalProvider,
-  useWeb3ModalAccount,
-} from "@web3modal/ethers/react";
-import DataContract from "../../artifacts/contracts/DataContract.sol/DataContract.json";
-import { ethers } from "ethers";
+import { useWeb3ModalAccount } from "@web3modal/ethers/react";
 import axios from "axios";
+import { ethers } from "ethers";
+import { useEffect, useState } from "react";
+import DataContract from "../../artifacts/contracts/DataContract.sol/DataContract.json";
+import { useStore } from "../store/store";
 
 interface DataItem {
   _name: string;
@@ -22,7 +19,7 @@ interface DataItem {
 }
 
 const Purchase = () => {
-  const { address, chainId, isConnected } = useWeb3ModalAccount();
+  const { address } = useWeb3ModalAccount();
 
   const {
     dataItems,

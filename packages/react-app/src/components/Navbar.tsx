@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -11,15 +10,15 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { useState } from "react";
 
-import { GitHubLogoIcon } from "@radix-ui/react-icons";
-import { buttonVariants } from "./ui/button";
 import { Menu } from "lucide-react";
-import { ModeToggle } from "./mode-toggle";
-import { LogoIcon } from "./Icons";
-import ConnectButton from "./ConnectButton";
 import { useStore } from "../store/store";
+import ConnectButton from "./ConnectButton";
+import { LogoIcon } from "./Icons";
 import SearchBar from "./SearchBar";
+import { ModeToggle } from "./mode-toggle";
+import { buttonVariants } from "./ui/button";
 
 interface RouteProps {
   href: string;

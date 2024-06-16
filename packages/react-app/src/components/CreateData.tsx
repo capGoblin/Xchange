@@ -1,23 +1,17 @@
-import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
-  DialogTrigger,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
   DialogDescription,
   DialogFooter,
+  DialogHeader,
+  DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { FaPlus } from "react-icons/fa";
-import {
-  useWeb3ModalProvider,
-  useWeb3ModalAccount,
-} from "@web3modal/ethers/react";
-import { useStore } from "../store/store";
 import { ethers } from "ethers";
+import React, { useState } from "react";
+import { useStore } from "../store/store";
 
 const CreateData = ({
   rootHex,
@@ -35,7 +29,7 @@ const CreateData = ({
   const [keywords, setKeywords] = useState("");
   const [size, setSize] = useState("");
 
-  const { address, chainId, isConnected } = useWeb3ModalAccount();
+  // const { address, chainId, isConnected } = useWeb3ModalAccount();
 
   const { contract, provider, signer } = useStore();
 

@@ -1,15 +1,11 @@
-import { Button } from "./ui/button";
-import { buttonVariants } from "./ui/button";
+import { Button, buttonVariants } from "./ui/button";
 // import { HeroCards } from "./HeroCards";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
-import { useStore } from "../store/store";
+import { useWeb3ModalProvider } from "@web3modal/ethers/react";
+import { BrowserProvider, ethers } from "ethers";
 import { useEffect, useState } from "react";
-import { ethers, BrowserProvider, Contract, formatUnits } from "ethers";
 import DataContractFactory from "../../artifacts/contracts/DataContractFactory.sol/DataContractFactory.json";
-import {
-  useWeb3ModalProvider,
-  useWeb3ModalAccount,
-} from "@web3modal/ethers/react";
+import { useStore } from "../store/store";
 import { HeroCards } from "./HeroCards";
 
 export const Hero = () => {

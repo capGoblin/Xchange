@@ -1,23 +1,10 @@
-import { About } from "./components/About";
-import { Cta } from "./components/Cta";
-import { FAQ } from "./components/FAQ";
-import { Features } from "./components/Features";
-import { Footer } from "./components/Footer";
-import { Hero } from "./components/Hero";
-import { HowItWorks } from "./components/HowItWorks";
-import { Navbar } from "./components/Navbar";
-import { Newsletter } from "./components/Newsletter";
-import { Pricing } from "./components/Pricing";
-import { ScrollToTop } from "./components/ScrollToTop";
-import { Services } from "./components/Services";
-import { Sponsors } from "./components/Sponsors";
-import { Team } from "./components/Team";
-import Upload from "./components/Upload";
-import { Testimonials } from "./components/Testimonials";
-import "./App.css";
 import { createWeb3Modal, defaultConfig } from "@web3modal/ethers/react";
-import { useStore } from "./store/store";
+import "./App.css";
+import { Hero } from "./components/Hero";
+import { Navbar } from "./components/Navbar";
 import Purchase from "./components/Purchase";
+import { ScrollToTop } from "./components/ScrollToTop";
+import Upload from "./components/Upload";
 
 // 1. Get projectId
 const projectId = "YOUR_PROJECT_ID";
@@ -53,7 +40,7 @@ createWeb3Modal({
 });
 
 function App() {
-  const { upload, purchase } = useStore();
+  // const { upload, purchase } = useStore();
   return (
     <>
       <Navbar />

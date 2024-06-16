@@ -1,21 +1,18 @@
-import React, { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
+import React, { useEffect, useState } from "react";
 
-import { ethers, BrowserProvider, Contract, formatUnits } from "ethers";
+import { useWeb3ModalProvider } from "@web3modal/ethers/react";
 import axios from "axios";
+import { BrowserProvider, ethers } from "ethers";
+import { FaPlus } from "react-icons/fa6";
 import DataContractFactory from "../../artifacts/contracts/DataContractFactory.sol/DataContractFactory.json";
 import { useStore } from "../store/store";
-import {
-  useWeb3ModalProvider,
-  useWeb3ModalAccount,
-} from "@web3modal/ethers/react";
-import { FaPlus } from "react-icons/fa6";
 import CreateData from "./CreateData";
 
 const Upload = () => {
-  const { address, chainId, isConnected } = useWeb3ModalAccount();
+  // const { address, chainId, isConnected } = useWeb3ModalAccount();
   const { walletProvider } = useWeb3ModalProvider();
   const [open, setOpen] = useState(false);
 
