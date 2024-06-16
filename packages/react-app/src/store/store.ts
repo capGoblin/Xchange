@@ -6,6 +6,7 @@ interface DataItem {
   _priceWei: string;
   _keywords: string[];
   _size: string;
+  _purchases: string;
 }
 
 interface State {

@@ -18,6 +18,7 @@ interface DataItem {
   _priceWei: string;
   _keywords: string[];
   _size: string;
+  _purchases: string;
 }
 
 const Purchase = () => {
@@ -124,6 +125,8 @@ const Purchase = () => {
         const priceEth = ethers.formatEther(priceWei);
         const keywords = await contract.keywords();
         const size = await contract.size();
+        const purchases = await contract.purchases();
+        const purchasesStr = purchases ? BigInt(purchases).toString() : "0";
 
         purchaseArr.push({
           _name: name,
@@ -132,6 +135,7 @@ const Purchase = () => {
           _priceWei: priceEth,
           _keywords: keywords,
           _size: size,
+          _purchases: purchasesStr,
         });
 
         // setDataItems([
@@ -274,6 +278,12 @@ const Purchase = () => {
                     <div className="text-sm font-semibold">Price (A0GI)</div>
                     <div className="text-sm text-gray-500 dark:text-gray-400">
                       {input._priceWei}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-sm font-semibold">Purchases</div>
+                    <div className="text-sm text-gray-500 dark:text-gray-400">
+                      {!input._purchases ? "0" : input._purchases}
                     </div>
                   </div>
                   <div>
