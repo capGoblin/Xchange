@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+
 import { ethers, BrowserProvider, Contract, formatUnits } from "ethers";
 import axios from "axios";
 import DataContractFactory from "../../artifacts/contracts/DataContractFactory.sol/DataContractFactory.json";
@@ -9,14 +11,20 @@ import {
   useWeb3ModalProvider,
   useWeb3ModalAccount,
 } from "@web3modal/ethers/react";
+import { FaPlus } from "react-icons/fa6";
+import CreateData from "./CreateData";
 
 const Upload = () => {
   const { address, chainId, isConnected } = useWeb3ModalAccount();
   const { walletProvider } = useWeb3ModalProvider();
 
   const [file, setFile] = useState<File | null>(null);
-  const { setContract, setProvider, setSigner } = useStore();
+  const [rootHex, setRootHex] = useState<String>("");
+  const [createData, setCreateData] = useState<boolean>(false);
+
+  const { setContract, setProvider, setSigner, setPurchase } = useStore();
   useEffect(() => {
+    setPurchase(false);
     const initialize = async () => {
       window;
       if ((window as any).ethereum == null) {
@@ -81,21 +89,42 @@ const Upload = () => {
           },
         }
       );
-      console.log(response);
+      console.log(response.data);
+      const str = extractRootHex(response.data);
+      console.log(str);
+      // if (!str) throw new Error("Root hex not found");
+      if (str) setRootHex(str);
+      setCreateData(true);
     } catch (error) {
       console.error("There was an error uploading the file!", error);
     }
   };
+
+  const extractRootHex = (data: string) => {
+    const match = data.match(/root=(0x[a-fA-F0-9]+)/);
+    const root = match ? match[1] : null;
+    return root;
+  };
   return (
     <>
-      <div className="grid w-full max-w-sm items-center gap-1.5">
+      <div className="grid w-full max-w-sm items-center justify-center gap-1.5">
         <form onSubmit={handleSubmit}>
-          <Label htmlFor="file">Add files here</Label>
-          <Input id="file" type="file" onChange={handleFileChange} />
-          <button type="submit">Upload</button>
+          <Label htmlFor="file" className="flex space-x-3 justify-center">
+            <FaPlus className="h-7 w-7" />
+            <div className="text-lg h-8">Add files here</div>
+          </Label>
+          <div className="flex flex-col justify-center items-center space-y-4">
+            <Input id="file" type="file" onChange={handleFileChange} />
+            <Button
+              type="submit"
+              className="h-10 w-max border-spacing-2 bg-blue-500 rounded-md"
+            >
+              Upload
+            </Button>
+          </div>
         </form>
+        {createData && <CreateData rootHex={rootHex} />}
       </div>
-      <div>Upload</div>
     </>
   );
 };

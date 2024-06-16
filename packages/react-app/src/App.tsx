@@ -16,6 +16,8 @@ import Upload from "./components/Upload";
 import { Testimonials } from "./components/Testimonials";
 import "./App.css";
 import { createWeb3Modal, defaultConfig } from "@web3modal/ethers/react";
+import Purchase from "./components/Purchase";
+import { useStore } from "./store/store";
 
 // 1. Get projectId
 const projectId = "YOUR_PROJECT_ID";
@@ -51,11 +53,19 @@ createWeb3Modal({
 });
 
 function App() {
+  const { upload, purchase } = useStore();
   return (
     <>
       <Navbar />
-      <Upload />
-      {/* <Hero />
+      {upload == false && purchase == false ? (
+        <Hero />
+      ) : upload == true && purchase == false ? (
+        <Upload />
+      ) : purchase == true && upload == false ? (
+        <Purchase />
+      ) : null}
+      {/* {upload ? <Upload /> : null}  */}
+      {/* 
       <Sponsors />
       <About />
       <HowItWorks />

@@ -18,33 +18,36 @@ import { Menu } from "lucide-react";
 import { ModeToggle } from "./mode-toggle";
 import { LogoIcon } from "./Icons";
 import ConnectButton from "./ConnectButton";
+import { useStore } from "../store/store";
 
 interface RouteProps {
   href: string;
   label: string;
 }
 
-const routeList: RouteProps[] = [
-  {
-    href: "#features",
-    label: "Features",
-  },
-  {
-    href: "#testimonials",
-    label: "Testimonials",
-  },
-  {
-    href: "#pricing",
-    label: "Pricing",
-  },
-  {
-    href: "#faq",
-    label: "FAQ",
-  },
-];
+// const routeList: RouteProps[] = [
+//   {
+//     href: "#features",
+//     label: "Upload",
+//   },
+//   {
+//     href: "#testimonials",
+//     label: "Testimonials",
+//   },
+//   {
+//     href: "#pricing",
+//     label: "Pricing",
+//   },
+//   {
+//     href: "#faq",
+//     label: "FAQ",
+//   },
+// ];
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const { upload, setUpload, purchase, setPurchase } = useStore();
+
   return (
     <header className="sticky border-b-[1px] top-0 z-40 w-full bg-white dark:border-b-slate-700 dark:bg-background">
       <NavigationMenu className="mx-auto">
@@ -81,7 +84,31 @@ export const Navbar = () => {
                   </SheetTitle>
                 </SheetHeader>
                 <nav className="flex flex-col justify-center items-center gap-2 mt-4">
-                  {routeList.map(({ href, label }: RouteProps) => (
+                  <a
+                    rel="noreferrer noopener"
+                    // href={}
+                    // key={i}
+                    onClick={() => {
+                      setUpload(!upload);
+                    }}
+                    className={`text-[17px] ${buttonVariants({
+                      variant: "ghost",
+                    })}`}
+                  >
+                    Upload
+                  </a>
+                  <a
+                    rel="noreferrer noopener"
+                    // href={}
+                    // key={i}
+                    onClick={() => setPurchase(!purchase)}
+                    className={`text-[17px] ${buttonVariants({
+                      variant: "ghost",
+                    })}`}
+                  >
+                    Purchase
+                  </a>
+                  {/* {routeList.map(({ href, label }: RouteProps) => (
                     <a
                       rel="noreferrer noopener"
                       key={label}
@@ -91,8 +118,8 @@ export const Navbar = () => {
                     >
                       {label}
                     </a>
-                  ))}
-                  <a
+                  ))} */}
+                  {/* <a
                     rel="noreferrer noopener"
                     href="https://github.com/leoMirandaa/shadcn-landing-page.git"
                     target="_blank"
@@ -101,8 +128,8 @@ export const Navbar = () => {
                     })}`}
                   >
                     <GitHubLogoIcon className="mr-2 w-5 h-5" />
-                    Github
-                  </a>
+                    Githsub
+                  </a> */}
                 </nav>
               </SheetContent>
             </Sheet>
@@ -110,7 +137,33 @@ export const Navbar = () => {
 
           {/* desktop */}
           <nav className="hidden md:flex gap-2">
-            {routeList.map((route: RouteProps, i) => (
+            <a
+              rel="noreferrer noopener"
+              // href={}
+              // key={i}
+              onClick={() => {
+                if (upload == false) setUpload(true);
+              }}
+              className={`text-[17px] ${buttonVariants({
+                variant: "ghost",
+              })}`}
+            >
+              Upload
+            </a>
+            <a
+              rel="noreferrer noopener"
+              // href={}
+              // key={i}
+              onClick={() => {
+                if (purchase == false) setPurchase(true);
+              }}
+              className={`text-[17px] ${buttonVariants({
+                variant: "ghost",
+              })}`}
+            >
+              Purchase
+            </a>
+            {/* {routeList.map((route: RouteProps, i) => (
               <a
                 rel="noreferrer noopener"
                 href={route.href}
@@ -121,7 +174,7 @@ export const Navbar = () => {
               >
                 {route.label}
               </a>
-            ))}
+            ))} */}
           </nav>
 
           <div className="hidden md:flex gap-2">

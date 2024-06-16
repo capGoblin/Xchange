@@ -1,9 +1,13 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"net/http"
 	"os"
+	"regexp"
+	"strings"
+	"sync"
 
 	"github.com/joho/godotenv"
 
@@ -16,6 +20,8 @@ import (
 	"github.com/0glabs/0g-storage-client/core"
 	"github.com/0glabs/0g-storage-client/node"
 	"github.com/0glabs/0g-storage-client/transfer"
+
+	"github.com/sirupsen/logrus"
 	// "github.com/0glabs/0g-storage-client/core"
 	// "github.com/0glabs/0g-storage-client/transfer"
 	// "github.com/0glabs/0g-storage-client/core"
@@ -38,20 +44,79 @@ type downloadArgs struct {
 	nodes []string
 }
 
+// LogBuffer is a thread-safe buffer to capture logs
+type LogBuffer struct {
+	sync.Mutex
+	buf *bytes.Buffer
+}
+
+func NewLogBuffer() *LogBuffer {
+	return &LogBuffer{buf: new(bytes.Buffer)}
+}
+
+func (lb *LogBuffer) Write(p []byte) (n int, err error) {
+	lb.Lock()
+	defer lb.Unlock()
+	return lb.buf.Write(p)
+}
+
+func (lb *LogBuffer) String() string {
+	lb.Lock()
+	defer lb.Unlock()
+	return lb.buf.String()
+}
+
+var logBuffer = NewLogBuffer()
+
+func init() {
+	logrus.SetOutput(logBuffer)
+	logrus.SetFormatter(&logrus.TextFormatter{
+		DisableColors: true,
+		FullTimestamp: true,
+	})
+}
+
+// ParseLastRootHash parses the last root hash from the logs
+func ParseLastRootHash(logs string) string {
+	lines := strings.Split(logs, "\n")
+	rootHashPattern := regexp.MustCompile(`root=0x[0-9a-fA-F]+`)
+	var lastRootHash string
+
+	for _, line := range lines {
+		if rootHashPattern.MatchString(line) {
+			matches := rootHashPattern.FindStringSubmatch(line)
+			if len(matches) > 0 {
+				lastRootHash = matches[0]
+			}
+		}
+	}
+
+	return lastRootHash
+}
+
+func getLastRootHash() string {
+	logs := logBuffer.String()
+	lastRootHash := ParseLastRootHash(logs)
+	return lastRootHash
+}
+
+
+
 func main() {
 	// client := connect()
 
 	// uploadFile(client)
 
-    // http.HandleFunc("/upload", corsMiddleware(uploadHandler))
+    http.HandleFunc("/upload", corsMiddleware(uploadHandler))
 
-    // fmt.Println("Starting server on :8080")
-    // if err := http.ListenAndServe(":8080", nil); err != nil {
-    //     fmt.Println("Error starting server:", err)
-    // }
+    fmt.Println("Starting server on :8080")
+    if err := http.ListenAndServe(":8080", nil); err != nil {
+        fmt.Println("Error starting server:", err)
+    }
 
 
-	download()
+	// download()
+
 	// fmt.Println("Starting server...")
 	// http.HandleFunc("/", handler)
 	// http.ListenAndServe(":8080", nil)
@@ -102,7 +167,10 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 
     uploadFile(client, tempFile.Name())
 
-    w.Write([]byte("File uploaded successfully"))
+	str := getLastRootHash()
+	// fmt.Println(str, "STR")
+
+	w.Write([]byte("File uploaded successfully: " + str))
 }
 
 
@@ -174,7 +242,9 @@ func uploadFile(client *node.Client, filePath string) {
 	if errw != nil {
 		return
 	}
-	fmt.Println(errw)
+
+	
+	fmt.Println(errw, "HII")
 	// if err := ; err != nil {
 	// 	fmt.Println(err)
 	// 	return
@@ -184,8 +254,8 @@ func uploadFile(client *node.Client, filePath string) {
 
 func download() {
 	downloadArgs := downloadArgs{
-		root:  "0xd7de846b1f4d337e8b31ec3344bc182437c65ec8c284e82b67a11dc0dd5b2cfe",
-		file:  "./dir/icon3.webp",
+		root:  "0x9124ef3c4925165f47cdaf186f896597d769bb19e5b159bbb23e5fa778d52af0",
+		file:  "./dir/icon3.tmp",
 		proof: false,
 		nodes: []string{"https://rpc-storage-testnet.0g.ai"},
 	}
