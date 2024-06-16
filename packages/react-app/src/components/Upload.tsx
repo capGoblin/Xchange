@@ -1,20 +1,17 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
-import { useWeb3ModalProvider } from "@web3modal/ethers/react";
 import axios from "axios";
-import { BrowserProvider, ethers } from "ethers";
 import { FaPlus } from "react-icons/fa6";
-import DataContractFactory from "../../artifacts/contracts/DataContractFactory.sol/DataContractFactory.json";
 import { useStore } from "../store/store";
-import CreateData from "./CreateData";
 import ButtonLoading from "./ButtonLoading";
+import CreateData from "./CreateData";
 
 const Upload = () => {
   // const { address, chainId, isConnected } = useWeb3ModalAccount();
-  const { walletProvider } = useWeb3ModalProvider();
+  // const { walletProvider } = useWeb3ModalProvider();
   const [open, setOpen] = useState(false);
 
   const [file, setFile] = useState<File | null>(null);
@@ -22,15 +19,7 @@ const Upload = () => {
   const [createData, setCreateData] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const {
-    setContract,
-    setProvider,
-    setSigner,
-    setPurchase,
-    upload,
-    purchase,
-    contract,
-  } = useStore();
+  const { upload, purchase } = useStore();
   // useEffect(() => {
   //   if (purchase) setPurchase(false);
   //   if (contract) return;
