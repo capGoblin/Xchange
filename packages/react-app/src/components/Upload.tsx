@@ -10,6 +10,7 @@ import { FaPlus } from "react-icons/fa6";
 import DataContractFactory from "../../artifacts/contracts/DataContractFactory.sol/DataContractFactory.json";
 import { useStore } from "../store/store";
 import CreateData from "./CreateData";
+import ButtonLoading from "./ButtonLoading";
 
 const Upload = () => {
   // const { address, chainId, isConnected } = useWeb3ModalAccount();
@@ -19,51 +20,60 @@ const Upload = () => {
   const [file, setFile] = useState<File | null>(null);
   const [rootHex, setRootHex] = useState<string>("");
   const [createData, setCreateData] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const { setContract, setProvider, setSigner, setPurchase, upload, purchase } =
-    useStore();
-  useEffect(() => {
-    if (purchase) setPurchase(false);
-    const initialize = async () => {
-      window;
-      if ((window as any).ethereum == null) {
-        // If MetaMask is not installed, we use the default provider,
-        // which is backed by a variety of third-party services (such
-        // as INFURA). They do not have private keys installed,
-        // so they only have read-only access
-        console.log("MetaMask not installed; using read-only defaults");
-        setProvider(ethers.getDefaultProvider());
-      } else {
-        // Connect to the MetaMask EIP-1193 object. This is a standard
-        // protocol that allows Ethers access to make all read-only
-        // requests through MetaMask.
-        const providerT = new BrowserProvider(walletProvider!);
-        // It also provides an opportunity to request access to write
-        // operations, which will be performed by the private key
-        // that MetaMask manages for the user.
+  const {
+    setContract,
+    setProvider,
+    setSigner,
+    setPurchase,
+    upload,
+    purchase,
+    contract,
+  } = useStore();
+  // useEffect(() => {
+  //   if (purchase) setPurchase(false);
+  //   if (contract) return;
+  //   const initialize = async () => {
+  //     window;
+  //     if ((window as any).ethereum == null) {
+  //       // If MetaMask is not installed, we use the default provider,
+  //       // which is backed by a variety of third-party services (such
+  //       // as INFURA). They do not have private keys installed,
+  //       // so they only have read-only access
+  //       console.log("MetaMask not installed; using read-only defaults");
+  //       setProvider(ethers.getDefaultProvider());
+  //     } else {
+  //       // Connect to the MetaMask EIP-1193 object. This is a standard
+  //       // protocol that allows Ethers access to make all read-only
+  //       // requests through MetaMask.
+  //       const providerT = new BrowserProvider(walletProvider!);
+  //       // It also provides an opportunity to request access to write
+  //       // operations, which will be performed by the private key
+  //       // that MetaMask manages for the user.
 
-        // "0x966efc9A9247116398441d87085637400A596C3F",
-        const signerT = await providerT.getSigner();
-        const contractT = new ethers.Contract(
-          "0x94018d8436f5A2ae49132aCf1C835e0AA05029E7",
-          DataContractFactory.abi,
-          signerT
-        );
+  //       // "0x966efc9A9247116398441d87085637400A596C3F",
+  //       const signerT = await providerT.getSigner();
+  //       const contractT = new ethers.Contract(
+  //         "0x94018d8436f5A2ae49132aCf1C835e0AA05029E7",
+  //         DataContractFactory.abi,
+  //         signerT
+  //       );
 
-        setContract(contractT);
-        setSigner(signerT);
-        setProvider(providerT);
+  //       setContract(contractT);
+  //       setSigner(signerT);
+  //       setProvider(providerT);
 
-        console.log(providerT);
-        console.log(signerT);
-        console.log(contractT);
+  //       console.log(providerT);
+  //       console.log(signerT);
+  //       console.log(contractT);
 
-        // await contractT.mintTokensToNewUsers();
-      }
-    };
+  //       // await contractT.mintTokensToNewUsers();
+  //     }
+  //   };
 
-    initialize();
-  }, []);
+  //   initialize();
+  // }, []);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -72,6 +82,7 @@ const Upload = () => {
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    setLoading(true);
     event.preventDefault();
     if (!file) return;
 
@@ -131,12 +142,16 @@ const Upload = () => {
               onChange={handleFileChange}
             />
             <div className="flex justify-center">
-              <Button
-                type="submit"
-                className="h-10 w-2/4 border-spacing-2 rounded-md"
-              >
-                Upload Listing
-              </Button>
+              {!loading ? (
+                <Button
+                  type="submit"
+                  className="h-10 w-2/4 border-spacing-2 rounded-md"
+                >
+                  Upload Listing
+                </Button>
+              ) : (
+                <ButtonLoading />
+              )}
             </div>
           </div>
         </form>
