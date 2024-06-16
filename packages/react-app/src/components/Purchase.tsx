@@ -39,7 +39,11 @@ const Purchase = () => {
   useEffect(() => {
     if (upload) setUpload(false);
     if (purchase) console.log("Purchase is true");
-    if (address == undefined || contract == null) {
+    if (
+      address == undefined ||
+      contract == null ||
+      dataContracts.length === 0
+    ) {
       setRerender(!rerender);
     }
     console.log(address);
@@ -48,7 +52,7 @@ const Purchase = () => {
       try {
         console.log(contract);
 
-        const contracts = await contract.getContractsByOwner(userAddress);
+        const contracts = await contract.getDataContracts();
         console.log(`Contracts for user ${userAddress}:`, contracts);
         setDataContracts(contracts);
       } catch (error) {
@@ -114,6 +118,8 @@ const Purchase = () => {
         const name = await contract.name();
         const description = await contract.description();
         const priceWei = await contract.priceWei();
+        const dataUrl = await contract.dataUrl();
+
         const priceEth = ethers.formatEther(priceWei);
         const keywords = await contract.keywords();
         const size = await contract.size();
@@ -121,7 +127,7 @@ const Purchase = () => {
         purchaseArr.push({
           _name: name,
           _description: description,
-          _dataUrl: "",
+          _dataUrl: dataUrl,
           _priceWei: priceEth,
           _keywords: keywords,
           _size: size,
@@ -157,7 +163,11 @@ const Purchase = () => {
     const contractAdd: DataItem = dataItems[index];
 
     const rootHash = `${contractAdd._dataUrl}`;
-
+    const contract = new ethers.Contract(
+      dataContracts[index],
+      DataContract.abi,
+      signer
+    );
     await contract.purchaseData({
       value: ethers.parseEther(`${contractAdd._priceWei}`),
     });
