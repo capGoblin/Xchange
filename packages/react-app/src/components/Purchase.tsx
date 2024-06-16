@@ -158,6 +158,10 @@ const Purchase = () => {
 
     const rootHash = `${contractAdd._dataUrl}`;
 
+    await contract.purchaseData({
+      value: ethers.parseEther(`${contractAdd._priceWei}`),
+    });
+
     try {
       // await contract.
       // const response = await fetch(
@@ -179,7 +183,7 @@ const Purchase = () => {
       // Create a temporary anchor element
       const a = document.createElement("a");
       a.href = url;
-      a.download = "downloaded_file.tmp"; // Specify the filename here
+      a.download = `${contractAdd._name}.tmp`; // Specify the filename here
       document.body.appendChild(a);
 
       // Initiate download automatically
